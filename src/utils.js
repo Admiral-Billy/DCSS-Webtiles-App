@@ -51,12 +51,13 @@ function createPopup(opts, content) {
 }
 
 function openPreferredServerDialog() {
+  const preferredServer = globals.preferredServer || '';
   let inputWindow = new BrowserWindow({
     width: 400,
     height: 200,
     parent: globals.mainWindow,
     modal: true,
-	autoHideMenuBar: true,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -64,10 +65,14 @@ function openPreferredServerDialog() {
     },
   });
 
-  inputWindow.loadFile('input-dialog.html');
+  const inputDialogPath = path.join(__dirname, '../input-dialog.html');
+
+  inputWindow.loadURL(`file://${inputDialogPath}?preferredServer=${encodeURIComponent(preferredServer)}`);
   inputWindow.on('closed', () => {
     inputWindow = null;
   });
+
+  inputWindow.setMenuBarVisibility(false);
 }
 
 function fetchCurrentAppVersionInfo() {
@@ -119,7 +124,6 @@ function saveSettings() {
     isFullScreen: globals.mainWindow.isFullScreen(),
     isMaximized: globals.mainWindow.isMaximized(),
     autoHideMenu: globals.autoHideMenu,
-    hideCursor: globals.hideCursor,
 	preferredServer: globals.preferredServer
   };
 
@@ -139,7 +143,6 @@ function loadSettings() {
       globals.closeUtilityWindows = settings.closeUtilityWindows;
       globals.darkMode = settings.darkMode;
       globals.autoHideMenu = settings.autoHideMenu;
-      globals.hideCursor = settings.hideCursor;
 	  globals.preferredServer = settings.preferredServer || '';
 
       // Set the window size, fullscreen state, and maximized state
@@ -171,7 +174,6 @@ function loadSettings() {
     globals.closeUtilityWindows = false;
     globals.darkMode = false;
     globals.autoHideMenu = false;
-    globals.hideCursor = false;
 
     // Apply the auto-hide menu setting
     globals.mainWindow.setAutoHideMenuBar(globals.autoHideMenu);
@@ -192,9 +194,6 @@ function resetGame() {
     setTimeout(() => {
       loadSettings();
       updateMenu();
-      applyDarkMode();
-      applyCursorHide();
-
     }, 100);
   });
 }
@@ -211,22 +210,6 @@ function updateMenu() {
   Menu.setApplicationMenu(menu);
 }
 
-function applyCursorHide() {
-  if (globals.hideCursor) {
-    globals.mainWindow.webContents.insertCSS(`
-      #app {
-        cursor: none;
-      }
-    `);
-  } else {
-    globals.mainWindow.webContents.insertCSS(`
-      #app {
-        cursor: auto;
-      }
-    `);
-  }
-}
-
 module.exports.createWindow = createWindow; 
 module.exports.createPopup = createPopup; 
 module.exports.fetchCurrentAppVersionInfo = fetchCurrentAppVersionInfo;
@@ -235,5 +218,4 @@ module.exports.saveSettings = saveSettings;
 module.exports.loadSettings = loadSettings;
 module.exports.resetGame = resetGame;
 module.exports.updateMenu = updateMenu;
-module.exports.applyCursorHide = applyCursorHide;
 module.exports.openPreferredServerDialog = openPreferredServerDialog;

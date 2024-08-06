@@ -29,16 +29,6 @@ const getTabData = () => { return {
       globals.closeUtilityWindows = !globals.closeUtilityWindows;
       utils.saveSettings();
     },
-  },
-  {
-    label: 'Hide the cursor in the window',
-    type: 'checkbox',
-    checked: globals.hideCursor,
-    click: () => {
-      globals.hideCursor = !globals.hideCursor;
-      utils.applyCursorHide();
-      utils.saveSettings();
-    },
   }
   ]
 }};

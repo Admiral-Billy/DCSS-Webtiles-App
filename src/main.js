@@ -32,7 +32,6 @@ async function createWindow() {
   });
 
   utils.loadSettings();
-  utils.applyCursorHide();
 
   utils.updateMenu();
 

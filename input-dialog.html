@@ -28,11 +28,17 @@
 </head>
 <body>
   <div class="container">
-    <label for="server-input">Enter your preferred server link (or nothing for no server):</label><br>
+    <label for="server-input">Enter your preferred server link (or nothing for no preference):</label><br>
     <input type="text" id="server-input" value=""><br>
     <button id="ok-button">OK</button>
   </div>
   <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const preferredServer = urlParams.get('preferredServer');
+    if (preferredServer) {
+      document.getElementById('server-input').value = preferredServer;
+    }
+
     document.getElementById('ok-button').addEventListener('click', () => {
       const serverLink = document.getElementById('server-input').value;
       window.electron.sendPreferredServer(serverLink);
