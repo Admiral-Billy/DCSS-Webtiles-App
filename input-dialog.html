@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Preferred Server</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <label for="server-input">Enter your preferred server link (or nothing for no server):</label><br>
+    <input type="text" id="server-input" value=""><br>
+    <button id="ok-button">OK</button>
+  </div>
+  <script>
+    document.getElementById('ok-button').addEventListener('click', () => {
+      const serverLink = document.getElementById('server-input').value;
+      window.electron.sendPreferredServer(serverLink);
+      window.close();
+    });
+  </script>
+</body>
+</html>
